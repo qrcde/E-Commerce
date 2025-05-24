@@ -31,15 +31,15 @@ Designed as part of a CS50 Web Programming course project, this application demo
 
 ## 🚀 Getting Started
 1. **Clone the repository**
-   git clone https://github.com/your-username/auction-site.git
-   cd auction-site
+   `git clone https://github.com/your-username/auction-site.git`
+   `cd auction-site`
 2. **Create a virtual environment**
-   python3 -m venv venv
-   venv\Scripts\activate
+   `python3 -m venv venv`
+   `venv\Scripts\activate`
 4. **Apply database migrations**
-   python manage.py makemigrations auctions
-   python manage.py migrate
+   `python manage.py makemigrations auctions`
+   `python manage.py migrate`
 5. **Run the development server**
-   python manage.py runserver
+   `python manage.py runserver`
 6. **Visit the application**
    Open your browser and go to `http://127.0.0.1:8000/`
