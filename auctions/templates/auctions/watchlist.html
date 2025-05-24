@@ -1,0 +1,23 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2 style="text-align: center; margin-bottom: 20px;">Your Watchlist</h2>
+    {% if user.is_authenticated %}
+        <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
+            {% for listing in watchlisted_listings %}
+                <a href="{% url 'listingview' listing.id %}">
+                    <div style=" justify-content: space-between;  width: 300px; height: 100%; box-sizing: border-box; padding: 10px; border: 1px solid #ccc; text-align: center; display: flex; flex-direction: column;">
+                        <h5 style="font-weight: 600; color: rgba(0, 0, 0, 0.714);">{{ listing.title }}</h5>
+                        <div style="width: 100%; height: 200px; display: flex; justify-content: center; align-items: center; overflow: hidden;">
+                            <img src="{{ listing.image }}" style="height: 100%; width: auto;">
+                        </div>
+                        <p style="color: rgba(0, 0, 0, 0.714); margin: auto 0;">{{ listing.description}}</p>
+                        <p style="color: rgba(0, 0, 0, 0.714); margin-top: auto; margin-bottom: 0;">Current bid: <strong>{{ listing.price }}</strong></p>
+                    </div>
+                </a>
+            {% empty %}
+                <p>You don't have any listings in your watchlist yet.</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}

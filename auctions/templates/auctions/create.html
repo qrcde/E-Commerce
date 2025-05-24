@@ -1,0 +1,23 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h1><center>Create New Listing</center></h1>
+    <br>
+    <form method="POST", action="{% url 'create' %}" style="display: flex; flex-direction: column; gap: 3px; width: 100%; max-width: 500px; margin: 0 auto;">
+        {% csrf_token %}
+        <div style="display: flex; flex-direction: row; gap: 10px;">
+            <table style="width: 100%;">
+                {{ listing_form.as_table }}
+            </table>
+        </div>
+        <div style="display: flex; flex-direction: row; align-items: center; gap: 10px;">
+            <label for="{{ bid_form.bid.id_for_label }}" style="margin-bottom: 0; margin-right: 45px; font-weight: bold;">Starting Price:</label>
+            <div>
+                {{ bid_form.bid }}
+            </div>
+        </div>
+        <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
+            <button type="submit" class="btn btn-primary" style="width: auto; margin-right: 17%;">Create</button>
+        </div>
+    </form>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <!--Display active listings for all users-->
+    <h2 style="text-align: center; margin-bottom: 20px;">Active Listings</h2>
+    <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
+        {% for listing in listings %}
+            <a href="{% url 'listingview' listing.id %}">
+                <div style=" justify-content: space-between;  width: 300px; height: 100%; box-sizing: border-box; padding: 10px; border: 1px solid #ccc; text-align: center; display: flex; flex-direction: column;">
+                    <h5 style="font-weight: 600; color: rgba(0, 0, 0, 0.714);">{{ listing.title }}</h5>
+                    <div style="width: 100%; height: 200px; display: flex; justify-content: center; align-items: center; overflow: hidden;">
+                        <img src="{{ listing.image }}" style="height: 100%; width: auto;">
+                    </div>
+                    <p style="color: rgba(0, 0, 0, 0.714); margin: auto 0;">{{ listing.description}}</p>
+                    <p style="color: rgba(0, 0, 0, 0.714); margin-top: auto; margin-bottom: 0;">Current bid: <strong>{{ listing.price }} </strong></p>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+    {% if user.is_authenticated and won_listings %}
+    <!--For authenticated users, display the listings they have won if any-->
+    <h2 style="color: green; text-align: center; margin-top: 40px; margin-bottom: 20px;">Your Won Listings</h2>
+    <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
+        {% for listing in won_listings %}
+            <a href="{% url 'listingview' listing.id %}">
+                <div style=" justify-content: space-between;  width: 300px; height: 100%; box-sizing: border-box; padding: 10px; border: 2px solid green; text-align: center; display: flex; flex-direction: column;">
+                    <h5 style="font-weight: 600; color: rgba(0, 0, 0, 0.714);">{{ listing.title }}</h5>
+                    <div style="width: 100%; height: 200px; display: flex; justify-content: center; align-items: center; overflow: hidden;">
+                        <img src="{{ listing.image }}" style="height: 100%; width: auto;">
+                    </div>
+                    <p style="color: rgba(0, 0, 0, 0.714); margin: auto 0;">{{ listing.description}}</p>
+                    <p style="color: green; margin-top: auto; margin-bottom: 0;">You won this auction!</p>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% if user.is_authenticated and closed_listings %}
+    <!--For authenticated users, display their closed listings if any-->
+    <h2 style="color: red; text-align: center; margin-top: 40px; margin-bottom: 20px;">Your Closed Listings:</h2>
+    <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
+        {% for listing in closed_listings %}
+            <a href="{% url 'listingview' listing.id %}">
+                <div style=" justify-content: space-between;  width: 300px; height: 100%; box-sizing: border-box; padding: 10px; border: 2px solid red; text-align: center; display: flex; flex-direction: column;">
+                    <h5 style="font-weight: 600; color: rgba(0, 0, 0, 0.714);">{{ listing.title }}</h5>
+                    <div style="width: 100%; height: 200px; display: flex; justify-content: center; align-items: center; overflow: hidden;">
+                        <img src="{{ listing.image }}" style="height: 100%; width: auto;">
+                    </div>
+                    <p style="color: rgba(0, 0, 0, 0.714); margin: auto 0;">{{ listing.description}}</p>
+                    <p style="color: red; margin-top: auto; margin-bottom: 0;">You closed this listing.</p>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+    {% endif %}
+{% endblock %}

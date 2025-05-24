@@ -1,0 +1,117 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    {% if error_message %}
+        <h2>Error:</h2>
+        <p>{{ error_message }}</p>
+        <a href="{% url 'index' %}">Back to Active Listings</a>
+    {% else %}
+        <div class="d-inline-flex flex-wrap justify-content-start align-items-start" style="gap: 20px;">
+            <!--Listing image-->
+            <div style="display: flex 1 1 50%; flex-direction: column; align-items: flex-start;">
+                <img src="{{ listing.image }}" style="max-height: 513px; max-width: 100%; align-items: center;">
+
+            {% if user.is_authenticated %}
+                <!--Display winner/ listing status for closed listings to authenticated users-->
+                {% if not listing.active %}
+                    <div class="alert alert-info mt-3">
+                        {% if user == listing.winner %}
+                            <strong>Congratulations! You have won this auction.</strong>
+                        {% else %}
+                            {% if listing.winner is not None %}
+                                This auction is closed. {% if user == listing.owner %}The winner is <strong>{{ listing.winner.username }}</strong>.{% endif %}
+                            {% else %}
+                                Auction closed with no bids.
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endif %}
+            
+            <!--'Watchlist' and 'Close Auction' buttons for authenticated users-->
+            <div style="display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap;">
+                <!--Add/Remove to/from watchlist-->
+                {% if listing.active %}
+                    {% if watchlisted %}
+                        <a href="{% url 'watchlist' 'remove' listing.id %}" class="btn btn-danger">Remove from watchlist</a>
+                    {% else %}
+                        <a href="{% url 'watchlist' 'add' listing.id %}" class="btn btn-primary">Add to watchlist</a>
+                    {% endif %}
+                {% endif %}
+                <!--'Close Auction' button for listing owner-->
+                {% if user == listing.owner and listing.active %}
+                    <form method="POST" action="{% url 'close' listing.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Close Auction</button>
+                    </form>
+                {% endif %}
+            </div>
+            </div>
+    {% endif %}
+            
+            
+            <!--Listing details-->
+            <div style="display: flex 1 1 50%; flex-direction: column; align-items: flex-start;">
+                <h2>{{ listing.title }}</h2>
+                <p>Listed by: <strong>{{listing.owner.username}}</strong> at <b>{{listing.created}}</b></p>
+                <p>{{ listing.description }}</p>
+                <p>Current bid: {{ listing.price }}</p>
+
+                <!--'New Bid' button and Bid form-->
+                {% if user.is_authenticated %}
+                    {% if listing.active %}
+                        <form method="POST" action="{% url 'make_bid' listing.id %}" style="display: flex; flex-direction: column; align-items: flex-start; margin-top: 20px;">
+                            {% csrf_token %}
+                            {% for field in new_bid_form %}
+                                <div class="form-group" style="margin-bottom: 10px;">
+                                    {{ field }}
+                                </div>
+                            {% endfor %}
+                            <button type="submit" class="btn btn-primary">New Bid</button>
+                        </form>
+                        <!--Display error message if Bid form invalid-->
+                        {% if message %}
+                            <div class="alert alert-danger mt-2" role="alert">{{ message }}</div>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+
+                <!--Comments-->
+                <div class="mt-4">
+                    {% if listing.active %}
+                        <!--Display comments if any-->
+                        <h4>Comments</h4>
+                        <div>
+                            {% for comment in comments %}
+                                <div>
+                                    <p><strong>{{ comment.author.username }}</strong>: {{ comment.comment }}</p>
+                                </div>
+                            {% empty %}
+                                <p>No comments yet. Be the first to comment!</p>
+                            {% endfor %}
+                        </div>
+                        <!--Comment form and 'Add Comment' button-->
+                        <form method="POST" action="{% url 'comment' listing.id %}" class="mt-3">
+                            {% csrf_token %}
+                            {% for field in comment_form %}
+                                <div class="form-group" style="margin-bottom: 10px;">
+                                    {{ field }}
+                                </div>
+                            {% endfor %}
+                            <button type="submit" class="btn btn-primary w-100">Add Comment</button>
+                        </form>
+                    <!--If listing inactive, only display existing comments-->    
+                    {% elif comments and not listing.active %}
+                        <h4>Comments</h4>
+                        <div>
+                            {% for comment in comments %}
+                                <div>
+                                    <p><strong>{{ comment.author.username }}</strong>: {{ comment.comment }}</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+{% endblock %}
