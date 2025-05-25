@@ -43,3 +43,9 @@ Developed as part of the CS50 Web Programming course, the project showcases comp
    `python manage.py runserver`
 6. **Visit the application** <br>
    Open `http://127.0.0.1:8000/`in your browser
+
+
+##
+
+_Developed by [qrcde](https://github.com/qrcde) as part of Harvard's CS50's Web Programming with Python and JavaScript course._
+
